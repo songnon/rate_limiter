@@ -1,7 +1,5 @@
 # Rate Limiter
 
-## Overview
-
 There are several techniques for limiting rates, e.g.:
 1. fixed window
 2. sliding window
@@ -21,7 +19,7 @@ pip install -e .
 
 ## Usage/Example
 
-Following is a simple example. Please refer to `examples/` directory for more examples.
+Following is a simple example. Please refer to `examples/` directory for more examples (e.g. multiprocessing).
 
 ```python
 import uuid

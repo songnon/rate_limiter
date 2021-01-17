@@ -21,18 +21,8 @@ class RateLimiter(object):
 
 class TokenBucketRateLimiter(RateLimiter):
     """
-    The task is to produce a rate-limiting module that stos a particular requestor
-    from making too many http requests within a particular period of time.
-
-    The module should expose a method that keeps track of requests and ​limits it such 
-    that a requester can only make 100 requests per hour. After the limit has been reached, 
-    return a 429 with the text "Rate limit exceeded. Try again in #{n} seconds".
-
-    Keeps track of requests and ​limits it such that a requester can only make 100 requests per hour.
-    After the limit has been reached, return a 429 with the text "Rate limit exceeded. Try again in #{n} seconds".
-
     This rate limiter is based on token bucket (https://en.wikipedia.org/wiki/Token_bucket).
-    it keeps track of the timestamp (in microsecond) of last request. A new request is only allowed if 
+    It keeps track of the timestamp (in microsecond) of last request. A new request is only allowed if 
     (MICROSECONDS_PER_HOUR // requests_per_hour) microseconds have elapsed since then. 
 
     Microsecond is chosen in order to support up to 1 million requests per second.
@@ -43,15 +33,16 @@ class TokenBucketRateLimiter(RateLimiter):
     
     def is_allowed(self, user_id):
         """
-        Check how many microseconds have elapsed since the last request for each user. it returns
-        a tuple (status-code, message-body)
+        Check how many microseconds have elapsed since the last request for each user.
+        A tuple (status-code, message-body) is returned:
         - (200, 'OK')
         - (429, 'Rate limit exceeded. Try again in #{n} seconds)
         """
         with self.lock:
             now_micros = int(round(time.time() * 1000000))
             
-            # if user_is is not in self.user_meta, 0 will be return
+            # if user_id is not in self.user_meta, 0 will be return to 
+            # ensure elapsed_micros is greater than self.interval_micros.
             last_request_micros = self.user_meta.get(user_id, 0)
             elapsed_micros = now_micros - last_request_micros
             logger.debug(f'lock is acquired by {str(threading.get_ident())}; {elapsed_micros / 1000000} seconds elapsed.')
