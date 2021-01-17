@@ -1,0 +1,10 @@
+.DS_Store
+**/.DS_Store
+**/.vscode/
+**/venv/
+**/__pycache__/
+!**/.gitkeep
+
+**/*.egg-info/
+**/dist/
+**/build/
